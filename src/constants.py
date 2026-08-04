@@ -3,11 +3,18 @@ COLS = 6
 CELL_SIZE = 100
 MAX_DEPTH = 4
 
+# AI Difficulty
+EASY = 1
+MEDIUM = 2
+HARD = 3
+
+AI_DIFFICULTY = HARD
+
 BOARD_WIDTH = COLS * CELL_SIZE
 BOARD_HEIGHT = ROWS * CELL_SIZE
 
 # Info panel
-INFO_PANEL_WIDTH = 250
+INFO_PANEL_WIDTH = 300
 INFO_PANEL_COLOR = (45, 45, 45)
 
 GOLD = (212, 175, 55)
@@ -33,17 +40,15 @@ TEXT_COLOR = (255, 255, 255)
 FPS = 60
 TITLE = "Othello"
 
-# matrix directions 
+# matrix directions
 
 DIRECTIONS = [
-    (-1, -1), #up left
-    (-1, 0), #up
-    (-1, 1), #up right
-
-    (0, -1), #left
-    (0, 1), #right
-
-    (1, -1), #down left
-    (1, 0), #down
-    (1, 1) #down right
+    (-1, -1),  # up left
+    (-1, 0),  # up
+    (-1, 1),  # up right
+    (0, -1),  # left
+    (0, 1),  # right
+    (1, -1),  # down left
+    (1, 0),  # down
+    (1, 1),  # down right
 ]
