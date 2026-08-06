@@ -45,7 +45,7 @@ def draw_seperator(screen, y):
     pygame.draw.line(screen, GRID_COLOR, (BOARD_WIDTH + 10, y), (WIDTH - 10, y), 2)
 
 
-def draw_info_panel(screen, board, player):
+def draw_info_panel(screen, board, player, difficulty):
 
     black_count, white_count = count_pieces(board)
 
@@ -81,14 +81,14 @@ def draw_info_panel(screen, board, player):
 
     y += 40
 
-    if AI_DIFFICULTY == EASY:
-        difficulty = "Easy"
+    if difficulty == EASY:
+        difficulty_text = "Easy"
 
-    elif AI_DIFFICULTY == MEDIUM:
-        difficulty = "Medium"
+    elif difficulty == MEDIUM:
+        difficulty_text = "Medium"
 
     else:
-        difficulty = "Hard"
+        difficulty_text = "Hard"
 
     screen.blit(
         heading_font.render("Difficulty", True, TEXT_COLOR), (BOARD_WIDTH + 20, y)
@@ -96,7 +96,7 @@ def draw_info_panel(screen, board, player):
 
     y += 30
 
-    screen.blit(font.render(difficulty, True, BLUE), (BOARD_WIDTH + 20, y))
+    screen.blit(font.render(difficulty_text, True, BLUE), (BOARD_WIDTH + 20, y))
 
     y += 40
 
@@ -161,14 +161,14 @@ def draw_info_panel(screen, board, player):
     )
 
 
-def draw_game(screen, board, player):
+def draw_game(screen, board, player, difficulty):
 
     draw_board(screen)
     valid_moves = get_valid_moves(board, player)
     draw_valid_moves(screen, valid_moves)
 
     draw_pieces(screen, board)
-    draw_info_panel(screen, board, player)
+    draw_info_panel(screen, board, player, difficulty)
 
 
 def draw_valid_moves(screen, valid_moves):

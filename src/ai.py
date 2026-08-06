@@ -29,7 +29,7 @@ def random_move(board, player):
 
 def copy_board(board):
     board_copy = []
-
+   
     for row in board:
         board_copy.append(row.copy())
 
@@ -92,14 +92,14 @@ def minimax(board, depth, depth_limit, alpha, beta, maximizing_player):
         return best_score
 
 
-def get_best_move(board, player):
+def get_best_move(board, player, difficulty):
 
     # EASY
-    if AI_DIFFICULTY == EASY:
+    if difficulty == EASY:
         return random_move(board, player)
 
     # MEDIUM
-    if AI_DIFFICULTY == MEDIUM:
+    if difficulty == MEDIUM:
         return get_minimax_move(board, player, 2)
 
     # HARD

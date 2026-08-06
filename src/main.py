@@ -4,6 +4,7 @@ from constants import *
 from board import *
 from ai import get_best_move
 from ui import draw_game
+from menu import run_menu
 
 human_player = BLACK
 ai_player = WHITE
@@ -14,6 +15,12 @@ def main():
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption(TITLE)
+
+    selected_difficulty = run_menu(screen)
+
+    if selected_difficulty is None:
+        pygame.quit()
+        return 
 
     clock = pygame.time.Clock()
 
@@ -64,7 +71,7 @@ def main():
                     current_player *= -1
 
         if current_player == ai_player:
-            move = get_best_move(board, ai_player)
+            move = get_best_move(board, ai_player, selected_difficulty)
 
             if move is not None:
 
@@ -93,7 +100,7 @@ def main():
                     print(f"{current_player} has no valid moves. Passing turn.")
                     current_player *= -1
 
-        draw_game(screen, board, current_player)
+        draw_game(screen, board, current_player, selected_difficulty)
 
         pygame.display.update()
 
