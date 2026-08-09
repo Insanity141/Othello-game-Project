@@ -5,22 +5,11 @@ from board import *
 from ai import get_best_move
 from ui import draw_game
 from menu import run_menu
+from toss import run_toss
+from end_screen import run_end_screen
 
-human_player = BLACK
-ai_player = WHITE
 
-def main():
-
-    pygame.init()
-
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption(TITLE)
-
-    selected_difficulty = run_menu(screen)
-
-    if selected_difficulty is None:
-        pygame.quit()
-        return 
+def play_match(screen, selected_difficulty, human_player, ai_player):
 
     clock = pygame.time.Clock()
 
@@ -29,16 +18,19 @@ def main():
     current_player = BLACK
 
     running = True
+    winner = EMPTY
 
     while running:
+
         clock.tick(FPS)
 
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
-                running = False
+                return None, None
 
             if event.type == pygame.MOUSEBUTTONDOWN and current_player == human_player:
+
                 mouse_x, mouse_y = pygame.mouse.get_pos()
 
                 row = mouse_y // CELL_SIZE
@@ -47,35 +39,33 @@ def main():
                 if not is_on_board(row, col):
                     continue
 
-                if make_move(board, row, col, current_player):
+                if make_move(board, row, col, human_player):
+
                     current_player *= -1
 
-                if game_over(board):
+                    if game_over(board):
 
-                    winner = get_winner(board)
+                        winner = get_winner(board)
+                        running = False
 
-                    if winner == BLACK:
-                        print("Black Wins!")
+                    elif not has_valid_moves(board, current_player):
 
-                    elif winner == WHITE:
-                        print("White Wins!")
+                        current_player *= -1
 
-                    else:
-                        print("Draw.")
+        if running and current_player == ai_player:
 
-                    running = False
+            draw_game(screen, board, current_player, selected_difficulty)
 
-                elif not has_valid_moves(board, current_player):
+            pygame.display.update()
 
-                    print(f"{current_player} has no valid moves. Passing turn.")
-                    current_player *= -1
+            pygame.time.delay(AI_MOVE_DELAY)
 
-        if current_player == ai_player:
             move = get_best_move(board, ai_player, selected_difficulty)
 
             if move is not None:
 
                 row, col = move
+
                 make_move(board, row, col, ai_player)
 
                 current_player *= -1
@@ -83,28 +73,68 @@ def main():
                 if game_over(board):
 
                     winner = get_winner(board)
-
-                    if winner == BLACK:
-                        print("Black Wins!")
-                        
-                    elif winner == WHITE:
-                        print("White Wins!")
-                        
-                    else:
-                        print("Draw.")
-                        
                     running = False
-                        
+
                 elif not has_valid_moves(board, current_player):
-                        
-                    print(f"{current_player} has no valid moves. Passing turn.")
+
                     current_player *= -1
 
-        draw_game(screen, board, current_player, selected_difficulty)
+            else:
 
-        pygame.display.update()
+                if game_over(board):
+
+                    winner = get_winner(board)
+                    running = False
+
+                else:
+
+                    current_player *= -1
+
+        if running:
+
+            draw_game(screen, board, current_player, selected_difficulty)
+
+            pygame.display.update()
+
+    return board, winner
+
+
+def main():
+
+    pygame.init()
+
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    pygame.display.set_caption(TITLE)
+
+    app_running = True
+
+    while app_running:
+
+        selected_difficulty = run_menu(screen)
+
+        if selected_difficulty is None:
+            break
+
+        toss_result = run_toss(screen)
+
+        if toss_result is None:
+            break
+
+        human_player, ai_player = toss_result
+
+        board, winner = play_match(screen, selected_difficulty, human_player, ai_player)
+
+        if board is None:
+            break
+
+        play_again = run_end_screen(screen, board, winner, human_player, ai_player)
+
+        if not play_again:
+            app_running = False
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ COLS = 6
 CELL_SIZE = 100
 MAX_DEPTH = 4
 
-#Menu and toss
+# Menu and toss
 MENU = 0
 COIN_TOSS = 1
 PLAYING = 2
@@ -42,6 +42,7 @@ BACKGROUND = (60, 60, 60)
 TEXT_COLOR = (255, 255, 255)
 
 FPS = 60
+AI_MOVE_DELAY = 700
 TITLE = "Othello"
 
 # matrix directions

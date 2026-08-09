@@ -2,7 +2,6 @@ import pygame
 
 from constants import *
 from board import *
-from status import get_status
 from ai_stats import get_stats
 
 
@@ -157,7 +156,8 @@ def draw_info_panel(screen, board, player, difficulty):
     y += 25
 
     screen.blit(
-        font.render(f"{think_time*1000:.2f} ms", True, BLUE), (BOARD_WIDTH + 20, y)
+        font.render(f"Time : {think_time * 1000:.2f} ms", True, BLUE),
+        (BOARD_WIDTH + 20, y),
     )
 
 
