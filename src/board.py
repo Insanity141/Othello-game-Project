@@ -84,10 +84,6 @@ def count_pieces(board):
 
     return black_count, white_count
 
-def print_board(board):
-    for row in board:
-        print(row)
-
 def get_flipable_pieces(board, row, col, player):
 
     opponent = -player

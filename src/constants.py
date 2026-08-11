@@ -1,7 +1,7 @@
 ROWS = 6
 COLS = 6
 CELL_SIZE = 100
-MAX_DEPTH = 4
+MAX_DEPTH = 3
 
 # Menu and toss
 MENU = 0

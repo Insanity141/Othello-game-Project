@@ -28,7 +28,6 @@ def random_move(board, player):
 
     return move
 
-
 def copy_board(board):
 
     board_copy = []
@@ -86,7 +85,6 @@ def minimax(board, depth, depth_limit, current_player, ai_player):
             best_score = min(best_score, score)
 
         return best_score
-
 
 def alpha_beta(board, depth, depth_limit, alpha, beta, current_player, ai_player):
 
