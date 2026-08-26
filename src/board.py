@@ -1,75 +1,70 @@
 from constants import *
 
+
 def create_board():
-    board = []
+    board = [[EMPTY] * COLS for _ in range(ROWS)]
 
-    for row in range(ROWS):
-        board.append([EMPTY] * COLS)
+    # Standard starting position, centered for even-sized boards.
+    mid_row = ROWS // 2 - 1
+    mid_col = COLS // 2 - 1
 
-    board[2][2] = WHITE
-    board[2][3] = BLACK
-    board[3][2] = BLACK
-    board[3][3] = WHITE
+    board[mid_row][mid_col] = WHITE
+    board[mid_row][mid_col + 1] = BLACK
+    board[mid_row + 1][mid_col] = BLACK
+    board[mid_row + 1][mid_col + 1] = WHITE
 
     return board
 
+
 def is_on_board(row, col):
+    return 0 <= row < ROWS and 0 <= col < COLS
 
-    if row < 0 or row >= ROWS:
-        return False
 
-    if col < 0 or col >= COLS:
-        return False
-
-    return True
-
-def is_valid_move(board, row, col, player):
-
-    if not is_on_board(row, col):
-        return False
-
-    if board[row][col] != EMPTY:
-        return False
+def get_flipable_pieces(board, row, col, player):
+    """Return all opponent pieces flipped by placing player at (row, col)."""
+    if not is_on_board(row, col) or board[row][col] != EMPTY:
+        return []
 
     opponent = -player
+    flippable = []
 
     for row_direction, col_direction in DIRECTIONS:
-
         current_row = row + row_direction
         current_col = col + col_direction
+        line = []
 
-        if not is_on_board(current_row, current_col):
-            continue
-
-        if board[current_row][current_col] != opponent:
-            continue
-
-        while True:
-
+        # We need at least one opponent piece followed by our own piece.
+        while (
+            is_on_board(current_row, current_col)
+            and board[current_row][current_col] == opponent
+        ):
+            line.append((current_row, current_col))
             current_row += row_direction
             current_col += col_direction
 
-            if not is_on_board(current_row, current_col):
-                break
+        if (
+            line
+            and is_on_board(current_row, current_col)
+            and board[current_row][current_col] == player
+        ):
+            flippable.extend(line)
 
-            if board[current_row][current_col] == EMPTY:
-                break
+    return flippable
 
-            if board[current_row][current_col] == player:
-                return True
 
-    return False
+def is_valid_move(board, row, col, player):
+    return bool(get_flipable_pieces(board, row, col, player))
+
 
 def get_valid_moves(board, player):
+    return [
+        (row, col)
+        for row in range(ROWS)
+        for col in range(COLS)
+        if board[row][col] == EMPTY
+        and get_flipable_pieces(board, row, col, player)
+    ]
 
-    valid_moves = []
-
-    for row in range(ROWS):
-        for col in range(COLS):
-            if is_valid_move(board, row, col, player):
-                valid_moves.append((row, col))
-
-    return valid_moves
 
 def count_pieces(board):
     black_count = 0
@@ -84,88 +79,44 @@ def count_pieces(board):
 
     return black_count, white_count
 
-def get_flipable_pieces(board, row, col, player):
-
-    opponent = -player
-
-    flippable = []
-
-    if not is_valid_move(board, row, col, player):
-        return flippable
-
-    for row_direction, col_direction in DIRECTIONS:
-
-        current_row = row + row_direction
-        current_col = col + col_direction
-
-        pieces = []
-
-        if not is_on_board(current_row, current_col):
-            continue
-
-        if board[current_row][current_col] != opponent:
-            continue
-
-        while True:
-
-            pieces.append((current_row, current_col))
-
-            current_row += row_direction
-            current_col += col_direction
-
-            if not is_on_board(current_row, current_col):
-                pieces = []
-                break
-
-            if board[current_row][current_col] == EMPTY:
-                pieces = []
-                break
-
-            if board[current_row][current_col] == player:
-                break
-
-        flippable.extend(pieces)
-
-    return flippable
 
 def flip_pieces(board, flippable, player):
-
     for piece_row, piece_col in flippable:
         board[piece_row][piece_col] = player
 
+
 def make_move(board, row, col, player):
-
-    if not is_valid_move(board, row, col, player):
-        return False
-
     flippable = get_flipable_pieces(board, row, col, player)
 
-    board[row][col] = player
+    if not flippable:
+        return False
 
+    board[row][col] = player
     flip_pieces(board, flippable, player)
 
     return True
 
-# Checks for valid move
 
 def has_valid_moves(board, player):
+    for row in range(ROWS):
+        for col in range(COLS):
+            if (
+                board[row][col] == EMPTY
+                and get_flipable_pieces(board, row, col, player)
+            ):
+                return True
 
-    return len(get_valid_moves(board, player)) > 0
+    return False
 
-# If the board is full
 
 def game_over(board):
-
-    return(
+    return (
         not has_valid_moves(board, BLACK)
-        and
-        not has_valid_moves(board, WHITE)
+        and not has_valid_moves(board, WHITE)
     )
 
-# Winner decider
 
 def get_winner(board):
-
     black_count, white_count = count_pieces(board)
 
     if black_count > white_count:

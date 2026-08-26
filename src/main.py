@@ -58,8 +58,6 @@ def play_match(screen, selected_difficulty, human_player, ai_player):
 
             pygame.display.update()
 
-            pygame.time.delay(AI_MOVE_DELAY)
-
             move = get_best_move(board, ai_player, selected_difficulty)
 
             if move is not None:
