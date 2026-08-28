@@ -42,7 +42,7 @@ BACKGROUND = (60, 60, 60)
 TEXT_COLOR = (255, 255, 255)
 
 FPS = 60
-AI_MOVE_DELAY = 700
+MIN_AI_THINK_TIME = 0.6
 TITLE = "Othello"
 
 # matrix directions

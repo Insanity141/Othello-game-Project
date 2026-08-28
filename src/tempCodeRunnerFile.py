@@ -1,4 +1,1 @@
-    # draw_status_bar(
-    #     screen,
-    #     player,
-    # )
+play_ma

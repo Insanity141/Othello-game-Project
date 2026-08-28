@@ -708,6 +708,7 @@ def draw_score_area(
 def draw_turn_card(
     screen,
     player,
+    human_player,
 ):
 
     rect = pygame.Rect(
@@ -726,15 +727,15 @@ def draw_turn_card(
         border_width=1,
     )
 
-    if player == BLACK:
+    if player == human_player:
 
-        label = "BLACK'S TURN"
-        piece_color = UI_BLACK_SOFT
+        label = "PLAYER'S TURN"
+        piece_color = UI_BLACK_SOFT if human_player == BLACK else UI_WHITE
 
     else:
 
-        label = "WHITE'S TURN"
-        piece_color = UI_WHITE
+        label = "AI'S TURN"
+        piece_color = UI_BLACK_SOFT if player == BLACK else UI_WHITE
 
     pygame.draw.circle(
         screen,
@@ -1015,6 +1016,7 @@ def draw_game(
     board,
     player,
     difficulty,
+    human_player,
 ):
 
     # Background + board
@@ -1023,7 +1025,6 @@ def draw_game(
     # Side bar top section
     draw_sidebar_header(
         screen,
-        difficulty,
     )
 
     # Legal moves
@@ -1053,6 +1054,7 @@ def draw_game(
     draw_turn_card(
         screen,
         player,
+        human_player,
     )
 
     draw_game_info(

@@ -1,4 +1,4 @@
-import pygame
+import pygame, time
 
 from constants import *
 from board import *
@@ -54,11 +54,20 @@ def play_match(screen, selected_difficulty, human_player, ai_player):
 
         if running and current_player == ai_player:
 
-            draw_game(screen, board, current_player, selected_difficulty)
+            draw_game(screen, board, current_player, selected_difficulty, human_player)
 
             pygame.display.update()
 
+            ai_start_time = time.perf_counter()
+
             move = get_best_move(board, ai_player, selected_difficulty)
+
+            ai_think_time = (time.perf_counter() - ai_start_time)
+
+            remaining_time = (MIN_AI_THINK_TIME - ai_think_time)
+
+            if remaining_time > 0:
+                time.sleep(remaining_time)
 
             if move is not None:
 
@@ -90,7 +99,7 @@ def play_match(screen, selected_difficulty, human_player, ai_player):
 
         if running:
 
-            draw_game(screen, board, current_player, selected_difficulty)
+            draw_game(screen, board, current_player, selected_difficulty, human_player)
 
             pygame.display.update()
 
@@ -126,7 +135,7 @@ def main():
         if board is None:
             break
 
-        play_again = run_end_screen(screen, board, winner, human_player, ai_player)
+        play_again = run_end_screen(screen, board, winner, human_player)
 
         if not play_again:
             app_running = False
